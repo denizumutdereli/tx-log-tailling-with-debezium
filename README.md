@@ -1,4 +1,4 @@
-# transaction log tailing pattern /w Debezium + Kafka
+# transaction log tailing pattern w/ Debezium + Kafka
 
 > Auth microservice implementation.
 
