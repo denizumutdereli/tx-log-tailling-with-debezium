@@ -63,6 +63,19 @@ services:
     depends_on:
       - zookeeper
       - kafka
+  kafkaui:
+    image: provectuslabs/kafka-ui
+    restart: "always"
+    ports:
+      - "8080:8080"
+    networks:
+      - kafka-network
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    depends_on:
+      - "kafka"
 
 networks:
   kafka-network:
