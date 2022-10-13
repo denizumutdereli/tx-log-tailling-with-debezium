@@ -6,7 +6,7 @@ start:
 	docker start kafka
 	docker start kafka_connect_with_debezium
 createdb:
-	docker exec -it postgres createdb --encoding=UTF8 --username=root --owner=root auth
+	docker exec -it postgres createdb --encoding=UTF8 --username=admin --owner=admin auth
 dropdb:
 	docker exec -it postgres dropdb auth
 migrate_create:
