@@ -1,7 +1,6 @@
 version: '3.7'
 
 services:
-
   postgres:
     image: debezium/postgres
     container_name: postgres
@@ -15,7 +14,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-        - ./postgres:/data/db
+      - ./postgres:/data/db
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -27,6 +26,19 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+  
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - kafka-network
+    restart: unless-stopped
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -63,7 +75,21 @@ services:
     depends_on:
       - zookeeper
       - kafka
+  kafkaui:
+    image: provectuslabs/kafka-ui
+    restart: "always"
+    ports:
+      - "8080:8080"
+    networks:
+      - kafka-network
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    depends_on:
+      - "kafka"
 
 networks:
   kafka-network:
     driver: bridge
+
